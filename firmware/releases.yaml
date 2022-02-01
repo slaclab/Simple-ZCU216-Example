@@ -1,0 +1,62 @@
+#-----------------------------------------------------------------------------
+# This file is part of the 'SPACE SMURF RFSOC'. It is subject to
+# the license terms in the LICENSE.txt file found in the top-level directory
+# of this distribution and at:
+#    https://confluence.slac.stanford.edu/display/ppareg/LICENSE.html.
+# No part of the 'SPACE SMURF RFSOC', including this file, may be
+# copied, modified, propagated, or distributed except according to the terms
+# contained in the LICENSE.txt file.
+#-----------------------------------------------------------------------------
+
+GitBase: ..
+
+TopRoguePackage: space_rfsoc_gen2
+
+RoguePackages:
+  - submodules/surf/python
+  - submodules/spacewire_light/python
+  - python     
+
+# RogueConfig:
+  # - ../software/config
+
+# RogueScripts:
+  # - ../software/scripts/devGui
+
+Targets:
+  McuAnalogBoard:
+    ImageDir: targets/McuAnalogBoard/images
+    Extensions:
+      - elf
+  McuRfMixerBoard:
+    ImageDir: targets/McuRfMixerBoard/images
+    Extensions:
+      - elf
+  McuRfSocBoard:
+    ImageDir: targets/McuRfSocBoard/images
+    Extensions:
+      - elf
+  SpaceRfSocGen2_XC:
+    ImageDir: targets/SpaceRfSocGen2_XC/images
+    Extensions:
+      - ltx
+      - xsa
+      - bit
+  SpaceRfSocGen2_XQ:
+    ImageDir: targets/SpaceRfSocGen2_XQ/images
+    Extensions:
+      - ltx
+      - xsa
+      - bit
+
+Releases:
+  all:
+    Primary: True
+    Targets:
+#      - McuAnalogBoard
+#      - McuRfMixerBoard
+#      - McuRfSocBoard
+      - SpaceRfSocGen2_XC
+      - SpaceRfSocGen2_XQ
+    Types:
+      - Rogue
