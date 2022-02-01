@@ -7,7 +7,7 @@ then
 fi
 
 # Define the hardware type
-hwType=XilinxZcu208
+hwType=XilinxZcu216
 
 # Make the build output
 mkdir -p /u1/$USER
