@@ -7,33 +7,11 @@
 # copied, modified, propagated, or distributed except according to the terms
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
+import pyrogue as pr
+import os
 
-GitBase: ..
+top_level = os.path.realpath(__file__).split('software')[0]
 
-TopRoguePackage: simple_zcu216_example
-
-RoguePackages:
-  - submodules/surf/python
-  - python     
-
-# RogueConfig:
-  # - ../software/config
-
-# RogueScripts:
-  # - ../software/scripts/devGui
-
-Targets:
-  SimpleZcu216Example:
-    ImageDir: targets/SimpleZcu216Example/images
-    Extensions:
-      - ltx
-      - xsa
-      - bit
-
-Releases:
-  all:
-    Primary: True
-    Targets:
-      - SimpleZcu216Example
-    Types:
-      - Rogue
+pr.addLibraryPath(top_level+'firmware/submodules/surf/python')
+pr.addLibraryPath(top_level+'firmware/submodules/axi-soc-ultra-plus-core/python')
+pr.addLibraryPath(top_level+'firmware/python')

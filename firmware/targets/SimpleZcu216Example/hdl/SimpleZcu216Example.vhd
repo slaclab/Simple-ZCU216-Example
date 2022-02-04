@@ -32,7 +32,7 @@ entity SimpleZcu216Example is
       BUILD_INFO_G : BuildInfoType);
    port (
       -- LMK Ports
-      lmkSync   : out   sl;
+      lmkSync   : out   sl := '0';
       clkMuxSel : out   slv(1 downto 0);
       i2c1Scl   : inout sl;
       i2c1Sda   : inout sl;
@@ -179,7 +179,6 @@ begin
          --       Ports
          --------------------------
          -- LMK Ports
-         lmkSync         => lmkSync,
          clkMuxSel       => clkMuxSel,
          i2c1Scl         => i2c1Scl,
          i2c1Sda         => i2c1Sda,

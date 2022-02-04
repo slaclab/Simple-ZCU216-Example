@@ -13,7 +13,7 @@ source -quiet $::env(RUCKUS_DIR)/vivado_env_var.tcl
 source -quiet $::env(RUCKUS_DIR)/vivado_proc.tcl
 
 # Remove all the .hdf/.bit files in the image directory
-set list [glob -directory $::env(IMAGES_DIR) *.hdf *.bit *.bit.gz]
+set list [glob -directory $::env(IMAGES_DIR) *.gz]
 foreach pntr ${list} {
    exec rm -rf ${pntr}
 }

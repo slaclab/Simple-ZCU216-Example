@@ -1,6 +1,3 @@
-# Include the .bin image
-export GEN_BIN_IMAGE = 1
-
 # Define target output
 target: bit
 
