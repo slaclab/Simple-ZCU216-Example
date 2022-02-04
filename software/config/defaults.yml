@@ -1,14 +1,13 @@
 Root:
   XilinxZcu216:
     Application:
-    Application:
       AppRingBuffer:
         Adc:
-          Ch[0]:
+          Ch[:]:
             TrigBurst: 0x0
             ContinuousMode: 0x1
         Dac:
-          Ch[0]:
+          Ch[:]:
             TrigBurst: 0x0
             ContinuousMode: 0x1
       DacSigGen:
