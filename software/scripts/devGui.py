@@ -16,7 +16,7 @@ import sys
 import argparse
 import importlib
 import rogue
-import pyrogue.pydm
+import axi_soc_ultra_plus_core.rfsoc_utility.pydm
 
 # rogue.Logging.setFilter("pyrogue.protocols.UartMemory",rogue.Logging.Info)
 # rogue.Logging.setLevel(rogue.Logging.Debug)
@@ -79,10 +79,11 @@ if __name__ == "__main__":
         initRead    = args.initRead,
         defaultFile = args.defaultFile,
     ) as root:
-        pyrogue.pydm.runPyDM(
+        axi_soc_ultra_plus_core.rfsoc_utility.pydm.runPyDM(
             root  = root,
             ui    = ui,
             sizeX = 800,
             sizeY = 800,
+            numCh = 16,
         )
     #################################################################
