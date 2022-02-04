@@ -67,8 +67,8 @@ architecture mapping of RfDataConverter is
          adc2_clk_n      : in  std_logic;
          clk_adc2        : out std_logic;
          clk_adc3        : out std_logic;
-         dac0_clk_p      : in  std_logic;
-         dac0_clk_n      : in  std_logic;
+         dac2_clk_p      : in  std_logic;
+         dac2_clk_n      : in  std_logic;
          clk_dac0        : out std_logic;
          clk_dac1        : out std_logic;
          clk_dac2        : out std_logic;
@@ -303,8 +303,8 @@ begin
          clk_adc1        => open,
          clk_adc2        => open,
          clk_adc3        => open,
-         dac0_clk_p      => dacClkP,
-         dac0_clk_n      => dacClkN,
+         dac2_clk_p      => dacClkP,
+         dac2_clk_n      => dacClkN,
          clk_dac0        => open,
          clk_dac1        => open,
          clk_dac2        => open,
