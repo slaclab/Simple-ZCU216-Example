@@ -12,7 +12,6 @@ import pyrogue as pr
 
 import simple_zcu216_example                 as rfsoc
 import axi_soc_ultra_plus_core.rfsoc_utility as rfsoc_utility
-import surf.axi                              as axi
 
 class Application(pr.Device):
     def __init__(self,**kwargs):
@@ -31,10 +30,4 @@ class Application(pr.Device):
             ramWidth     = 10, # Must match RAM_ADDR_WIDTH_G config
             smplPerCycle = 16, # Must match SAMPLE_PER_CYCLE_G config
             expand       = True,
-        ))
-
-        self.add(axi.AxiStreamFrameRateLimiter(
-            name   = 'RateLimiter',
-            offset = 0x02_000000,
-            # expand = True,
         ))
