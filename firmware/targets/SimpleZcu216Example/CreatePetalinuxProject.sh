@@ -16,7 +16,7 @@ rxBuffCnt=256
 txBuffCnt=16
 
 # Define DMA Buffer Size
-buffSize=0x200000 # 2MB
+buffSize=0x10000 # 64kB
 
 ####################################################
 
