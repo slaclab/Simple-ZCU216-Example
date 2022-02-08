@@ -104,7 +104,7 @@ $ source CreatePetalinuxProject.sh images/SimpleZcu216Example-0x01000000-2022020
 https://xilinx-wiki.atlassian.net/wiki/x/EYMfAQ
 
 2) Copy For the boot images, simply copy the files to the FAT partition.
-This typically will include system.bit, BOOT.BIN, image.ub, and boot.scr
+This typically will include system.bit, BOOT.BIN, image.ub, and boot.scr.  Here's an example:
 
 ```bash
 sudo mount /dev/sde1 /u1/boot
