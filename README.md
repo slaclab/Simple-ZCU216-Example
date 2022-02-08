@@ -138,7 +138,7 @@ sudo dd if=/u1/ruckman/build/petalinux/SimpleZcu216Example/images/linux/rootfs.e
 1) Using "scp" to copy your .bit file to the SD memory card on the RFSoC.  Here's an example:
 
 ```bash
-scp Simple-ZCU216-Example/firmware/targets/SimpleZcu216Example/images/SimpleZcu216Example-0x01000000-20220204204648-ruckman-90df89c.bit root@10.0.0.200:/media/sd-mmcblk0p1/system.bit
+scp SimpleZcu216Example-0x01000000-20220204204648-ruckman-90df89c.bit root@10.0.0.200:/media/sd-mmcblk0p1/system.bit
 ```
 
 2) Send a "sync" and "reboot" command to the RFSoC to load new firmware:  Here's an example:
