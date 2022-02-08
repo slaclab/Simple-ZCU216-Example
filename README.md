@@ -144,7 +144,7 @@ scp Simple-ZCU216-Example/firmware/targets/SimpleZcu216Example/images/SimpleZcu2
 2) Send a "sync" and "reboot" command to the RFSoC to load new firmware:  Here's an example:
 
 ```bash
-ssh root@10.0.0.200 \'/bin/sync; /sbin/reboot\'
+ssh root@10.0.0.200 '/bin/sync; /sbin/reboot'
 ```
 
 <!--- ######################################################## -->
