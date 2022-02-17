@@ -1,7 +1,7 @@
 ##################################
 # Setup environment
 ##################################
-source /afs/slac.stanford.edu/g/reseng/vol26/anaconda/miniconda3/etc/profile.d/conda.sh
+source /afs/slac.stanford.edu/g/reseng/vol31/anaconda/anaconda3/etc/profile.d/conda.sh
 
 ##################################
 # Activate Rogue conda Environment
