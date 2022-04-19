@@ -168,7 +168,7 @@ $ source setup_env_slac.sh
 2) Lauch the GUI:
 
 ```bash
-$ python scripts/devGui
+$ python scripts/devGui.py
 ```
 
 <!--- ######################################################## -->
