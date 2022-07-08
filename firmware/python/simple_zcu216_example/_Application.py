@@ -24,7 +24,8 @@ class Application(pr.Device):
             expand   = True,
         ))
 
-        self.add(rfsoc_utility.DacSigGen(
+        self.add(rfsoc_utility.SigGen(
+            name         = 'DacSigGen',
             offset       = 0x01_000000,
             numCh        = 16,  # Must match NUM_CH_G config
             ramWidth     = 10, # Must match RAM_ADDR_WIDTH_G config
