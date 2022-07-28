@@ -116,21 +116,13 @@ sudo sync /u1/boot/
 sudo umount /u1/boot
 ```
 
-3) For the root file system, the process will depend on the format of your root file system image.
+3) Power down the RFSoC board
 
-`roofts.ext4 -  This is an uncompressed ext4 file system image. To copy the contents to the root partition, you can use the following command: `
+4) Confirm the Mode SW2 [4:1] = 1110 (Mode Pins [3:0]). Note: Switch OFF = 1 = High; ON = 0 = Low.
 
-```bash
-sudo dd if=/u1/ruckman/build/petalinux/SimpleZcu216Example/images/linux/rootfs.ext4 of=/dev/sde2
-```
+5) Power up the RFSoC board
 
-4) Power down the RFSoC board
-
-5) Confirm the Mode SW2 [4:1] = 1110 (Mode Pins [3:0]). Note: Switch OFF = 1 = High; ON = 0 = Low.
-
-6) Power up the RFSoC board
-
-7) Confirm that you can ping the boot after it boots up
+6) Confirm that you can ping the boot after it boots up
 
 <!--- ######################################################## -->
 
