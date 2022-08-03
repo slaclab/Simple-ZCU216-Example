@@ -75,7 +75,7 @@ class Root(pr.Root):
             self.add(self.adcProcessor[i])
 
             # DAC Ring Buffer Path
-            self.ringBufferDac[i] >> self.dataWriter.getChannel(i+8)
+            self.ringBufferDac[i] >> self.dataWriter.getChannel(i+16)
             self.ringBufferDac[i] >> self.dacRateDrop[i] >> self.dacProcessor[i]
             self.add(self.dacProcessor[i])
 
