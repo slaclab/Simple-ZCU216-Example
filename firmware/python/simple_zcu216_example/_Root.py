@@ -13,6 +13,8 @@ import time
 import rogue
 import rogue.interfaces.stream as stream
 import rogue.utilities.fileio
+import rogue.hardware.axi
+import rogue.interfaces.memory
 
 import pyrogue as pr
 import pyrogue.protocols
@@ -28,6 +30,7 @@ class Root(pr.Root):
     def __init__(self,
                  ip          = '10.0.0.200', # ETH Host Name (or IP address)
                  defaultFile = None,
+                 lmkConfig   = 'config/lmk/HexRegisterValues.txt',
                  **kwargs):
 
         # Pass custom value to parent via super function
@@ -35,6 +38,7 @@ class Root(pr.Root):
 
         # Local Variables
         self.defaultFile = defaultFile
+        self.lmkConfig   = lmkConfig
 
         # File writer
         self.dataWriter = pr.utilities.fileio.StreamWriter()
@@ -44,12 +48,15 @@ class Root(pr.Root):
         ##                              Register Access
         ##################################################################################
 
-        # Start a TCP Bridge Client, Connect remote server at 'ethReg' ports 9000 & 9001.
-        self.tcpReg = rogue.interfaces.memory.TcpClient(ip,9000)
+        if ip != None:
+            # Start a TCP Bridge Client, Connect remote server at 'ethReg' ports 9000 & 9001.
+            self.memMap = rogue.interfaces.memory.TcpClient(ip,9000)
+        else:
+            self.memMap = rogue.hardware.axi.AxiMemMap('/dev/axi_memory_map')
 
         # Added the RFSoC HW device
         self.add(rfsoc.XilinxZcu216(
-            memBase    = self.tcpReg,
+            memBase    = self.memMap,
             offset     = 0x04_0000_0000, # Full 40-bit address space
             expand     = True,
         ))
@@ -59,8 +66,12 @@ class Root(pr.Root):
         ##################################################################################
 
         # Create rogue stream arrays
-        self.ringBufferAdc = [stream.TcpClient(ip,10000+2*(i+0))  for i in range(16)]
-        self.ringBufferDac = [stream.TcpClient(ip,10000+2*(i+16)) for i in range(16)]
+        if ip != None:
+            self.ringBufferAdc = [stream.TcpClient(ip,10000+2*(i+0))  for i in range(16)]
+            self.ringBufferDac = [stream.TcpClient(ip,10000+2*(i+16)) for i in range(16)]
+        else:
+            self.ringBufferAdc = [rogue.hardware.axi.AxiStreamDma('/dev/axi_stream_dma_0', i,    True) for i in range(16)]
+            self.ringBufferDac = [rogue.hardware.axi.AxiStreamDma('/dev/axi_stream_dma_0', 16+i, True) for i in range(16)]
         self.adcRateDrop   = [stream.RateDrop(True,1.0) for i in range(16)]
         self.dacRateDrop   = [stream.RateDrop(True,1.0) for i in range(16)]
         self.adcProcessor  = [rfsoc_utility.RingBufferProcessor(name=f'AdcProcessor[{i}]',sampleRate=2.5E+9) for i in range(16)]
@@ -107,7 +118,7 @@ class Root(pr.Root):
                 lmk.enable.set(True)
                 lmk.PwrDwnLmkChip()
                 lmk.PwrUpLmkChip()
-                lmk.LoadCodeLoaderHexFile('config/lmk/HexRegisterValues.txt')
+                lmk.LoadCodeLoaderHexFile(self.lmkConfig)
                 lmk.Init()
                 lmk.enable.set(False)
 

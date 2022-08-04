@@ -14,6 +14,7 @@ TopRoguePackage: simple_zcu216_example
 
 RoguePackages:
   - submodules/surf/python
+  - submodules/axi-soc-ultra-plus-core/python
   - python     
 
 # RogueConfig:
