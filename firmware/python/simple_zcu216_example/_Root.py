@@ -29,7 +29,8 @@ rogue.Version.minVersion('5.10.0')
 class Root(pr.Root):
     def __init__(self,
                  ip          = '10.0.0.200', # ETH Host Name (or IP address)
-                 defaultFile = None,
+                 top_level   = '',
+                 defaultFile = '',
                  lmkConfig   = 'config/lmk/HexRegisterValues.txt',
                  **kwargs):
 
@@ -37,8 +38,13 @@ class Root(pr.Root):
         super().__init__(**kwargs)
 
         # Local Variables
-        self.defaultFile = defaultFile
-        self.lmkConfig   = lmkConfig
+        self.top_level   = top_level
+        if self.top_level != '':
+            self.defaultFile = f'{top_level}/{defaultFile}'
+            self.lmkConfig   = f'{top_level}/{lmkConfig}'
+        else:
+            self.defaultFile = defaultFile
+            self.lmkConfig   = lmkConfig
 
         # File writer
         self.dataWriter = pr.utilities.fileio.StreamWriter()
@@ -96,8 +102,9 @@ class Root(pr.Root):
         super(Root, self).start(**kwargs)
 
         # Useful pointers
-        lmk      = self.XilinxZcu216.Hardware.Lmk
-        i2cToSpi = self.XilinxZcu216.Hardware.I2cToSpi
+        lmk       = self.XilinxZcu216.Hardware.Lmk
+        i2cToSpi  = self.XilinxZcu216.Hardware.I2cToSpi
+        dacSigGen = self.XilinxZcu216.Application.DacSigGen
 
         # Set the SPI clock rate
         i2cToSpi.SpiClockRate.setDisp('115kHz')
@@ -126,7 +133,10 @@ class Root(pr.Root):
             self.XilinxZcu216.RfDataConverter.Reset.set(0x1)
 
             # Load the waveform data into DacSigGen
-            self.XilinxZcu216.Application.DacSigGen.LoadCsvFile()
+            if self.top_level != '':
+                csvFile = dacSigGen.CsvFilePath.get()
+                dacSigGen.CsvFilePath.set(f'{self.top_level}/{csvFile}')
+            dacSigGen.LoadCsvFile()
 
             # Update all SW remote registers
             self.ReadAll()
