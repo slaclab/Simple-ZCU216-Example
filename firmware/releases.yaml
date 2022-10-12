@@ -27,9 +27,7 @@ Targets:
   SimpleZcu216Example:
     ImageDir: targets/SimpleZcu216Example/images
     Extensions:
-      - ltx
-      - xsa
-      - bit
+      - petalinux.tar.gz
 
 Releases:
   all:

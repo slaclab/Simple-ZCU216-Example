@@ -10,6 +10,3 @@
 [submodule "firmware/submodules/axi-soc-ultra-plus-core"]
 	path = firmware/submodules/axi-soc-ultra-plus-core
 	url = git@github.com:slaclab/axi-soc-ultra-plus-core
-[submodule "firmware/submodules/sysgen-dsp-lib"]
-	path = firmware/submodules/sysgen-dsp-lib
-	url = git@github.com:slaclab/sysgen-dsp-lib
