@@ -105,6 +105,7 @@ class Root(pr.Root):
         lmk       = self.XilinxZcu216.Hardware.Lmk
         i2cToSpi  = self.XilinxZcu216.Hardware.I2cToSpi
         dacSigGen = self.XilinxZcu216.Application.DacSigGen
+        rfdc      = self.XilinxZcu216.RfDataConverter
 
         # Set the SPI clock rate
         i2cToSpi.SpiClockRate.setDisp('115kHz')
@@ -129,8 +130,20 @@ class Root(pr.Root):
                 lmk.Init()
                 lmk.enable.set(False)
 
-            # Reset the RF Data Converter
-            self.XilinxZcu216.RfDataConverter.Reset.set(0x1)
+                # Reset the RF Data Converter
+                print(f'Resetting RF Data Converter...')
+                rfdc.Reset.set(0x1)
+                time.sleep(0.1)
+                for i in range(4):
+                    rfdc.adcTile[i].RestartSM.set(0x1)
+                    while rfdc.adcTile[i].pllLocked.get() != 0x1:
+                        time.sleep(0.1)
+                    rfdc.dacTile[i].RestartSM.set(0x1)
+                    while rfdc.dacTile[i].pllLocked.get() != 0x1:
+                        time.sleep(0.1)
+
+            # Wait for DSP Clock to be stable
+            time.sleep(1.0)
 
             # Load the waveform data into DacSigGen
             if self.top_level != '':
