@@ -45,7 +45,7 @@ $ git clone --recursive git@github.com:slaclab/Simple-ZCU216-Example
 
 # How to generate the RFSoC .BIT and .XSA files
 
-1) Setup Xilinx licensing
+1) Setup Xilinx licensing (if on SLAC AFS network) else requires Vivado install and licensing on your local machine
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
@@ -81,11 +81,11 @@ drwxr-xr-x 2 ruckman re 2.0K Feb  4 21:15 .
 
 1) Generate the .bit and .xsa files (refer to `How to generate the RFSoC .BIT and .XSA files` instructions).
 
-2) Setup Xilinx licensing and petalinux software
+2) Setup Xilinx licensing and petalinux software (if on SLAC AFS network) else requires petalinux install on your local machine
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
-$ source /u3/petalinux-v2021.2/settings.sh
+$ source /u1/petalinux-v2022.2/settings.sh
 ```
 
 3) Go to the target directory and run the `CreatePetalinuxProject.sh` script with arg pointing to path of .XSA file:
@@ -97,14 +97,14 @@ $ source CreatePetalinuxProject.sh images/SimpleZcu216Example-0x01000000-2022020
 
 <!--- ######################################################## -->
 
-# How to make the SD memory card for the first time
+# How to make the SD memory card for the "first time"
 
 1) Creating Two Partitions.  Refer to URL below
 
 https://xilinx-wiki.atlassian.net/wiki/x/EYMfAQ
 
 2) Copy For the boot images, simply copy the files to the FAT partition.
-This typically will include system.bit, BOOT.BIN, image.ub, and boot.scr.  Here's an example:
+This typically will include system.bit, BOOT.BIN, image.ub, and boot.scr.  Here's an example (assuming SD drive is "/dev/sde")
 
 ```bash
 sudo mount /dev/sde1 /u1/boot
@@ -128,7 +128,7 @@ sudo umount /u1/boot
 
 # How to remote update the firmware bitstream
 
-1) Using "scp" to copy your .bit file to the SD memory card on the RFSoC.  Here's an example:
+1) Using "scp" to copy your .bit file to the SD memory card on the RFSoC.  Here's an example (assumes your DHCP server assigns 10.0.0.200 to RFSoC's mac address):
 
 ```bash
 scp SimpleZcu216Example-0x01000000-20220204204648-ruckman-90df89c.bit root@10.0.0.200:/media/sd-mmcblk0p1/system.bit
@@ -154,13 +154,18 @@ ssh root@10.0.0.200 '/bin/sync; /sbin/reboot'
 
 ```bash
 $ cd Simple-ZCU216-Example/software
+```
+
+2) Setup the Rogue Anaconda install (if on SLAC AFS network) else you will need to do the Anaconda Rogue install on local machine
+
+```bash
 $ source setup_env_slac.sh
 ```
 
-2) Lauch the GUI:
+3) Lauch the GUI (assumes your DHCP server assigns 10.0.0.200 to RFSoC's mac address):
 
 ```bash
-$ python scripts/devGui.py
+$ python scripts/devGui.py --ip 10.0.0.200
 ```
 
 <!--- ######################################################## -->
