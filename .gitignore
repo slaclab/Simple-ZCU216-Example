@@ -46,3 +46,4 @@ bin*
 *.bif
 *.elf
 *.dcp
+*.swp
