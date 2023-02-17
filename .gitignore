@@ -15,6 +15,11 @@
 *.bin
 *.ld
 *.dat
+*.htm
+
+# Matlab
+*.autosave
+*.slxc
 
 # OS files
 .DS_Store
@@ -24,8 +29,8 @@
 .Trashes
 ehthumbs.db
 Thumps.db
+*.swp
 build.info
-.ipynb_checkpoints
 
 # Build directories 
 build*
@@ -45,5 +50,3 @@ bin*
 *.pdi
 *.bif
 *.elf
-*.dcp
-*.swp
