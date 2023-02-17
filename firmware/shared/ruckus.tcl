@@ -7,3 +7,7 @@ loadRuckusTcl $::env(TOP_DIR)/submodules/axi-soc-ultra-plus-core/hardware/Xilinx
 
 # Load RTL code
 loadSource -dir "$::DIR_PATH/rtl"
+
+# Load IP cores
+loadIpCore -dir "$::DIR_PATH/ip"
+
