@@ -101,17 +101,19 @@ sudo umount /u1/boot
 
 # How to remote update the firmware bitstream
 
-1) Using "scp" to copy your .bit file to the SD memory card on the RFSoC.  Here's an example (assumes your DHCP server assigns 10.0.0.200 to RFSoC's mac address):
+- Assumes the DHCP assigned IP address is 10.0.0.10
+
+1) Using "scp" to copy your .bit file to the SD memory card on the RFSoC.  Here's an example:
 
 ```bash
-ssh-keygen -f "$HOME/.ssh/known_hosts" -R "10.0.0.200" # https://jira.slac.stanford.edu/browse/ESRFOC-54
+ssh-keygen -f "$HOME/.ssh/known_hosts" -R "10.0.0.10" # https://jira.slac.stanford.edu/browse/ESRFOC-54
 scp SimpleZcu216Example-0x01000000-20220204204648-ruckman-90df89c.bit root@10.0.0.200:/media/sd-mmcblk0p1/system.bit
 ```
 
 2) Send a "sync" and "reboot" command to the RFSoC to load new firmware:  Here's an example:
 
 ```bash
-ssh root@10.0.0.200 '/bin/sync; /sbin/reboot'
+ssh root@10.0.0.10 '/bin/sync; /sbin/reboot'
 ```
 
 <!--- ######################################################## -->
