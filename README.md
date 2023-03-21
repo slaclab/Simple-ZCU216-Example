@@ -18,7 +18,7 @@ $ git clone --recursive git@github.com:slaclab/Simple-ZCU216-Example
 
 # How to generate the RFSoC .BIT and .XSA files
 
-1) Setup Xilinx licensing (if on SLAC AFS network) else requires Vivado install and licensing on your local machine
+1) Setup Xilinx PATH and licensing (if on SLAC AFS network) else requires Vivado install and licensing on your local machine
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
@@ -54,11 +54,11 @@ drwxr-xr-x 2 ruckman re 2.0K Feb  4 21:15 .
 
 1) Generate the .bit and .xsa files (refer to `How to generate the RFSoC .BIT and .XSA files` instructions).
 
-2) Setup Xilinx licensing and petalinux software (if on SLAC AFS network) else requires petalinux install on your local machine
+2) Setup Xilinx licensing and petalinux software (if on SLAC AFS network) else requires Xilinx & petalinux install on your local machine
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
-$ source /u1/petalinux-v2022.2/settings.sh
+$ source /path/to/petalinux/2022.2/settings.sh
 ```
 
 3) Go to the target directory and run the `CreatePetalinuxProject.sh` script with arg pointing to path of .XSA file:
@@ -124,22 +124,19 @@ ssh root@10.0.0.200 '/bin/sync; /sbin/reboot'
 
 # How to run the Rogue GUI
 
-1) Go to software directory and setup the rogue environment
+- Assumes the DHCP assigned IP address is 10.0.0.10
+
+1) Setup the rogue environment (if on SLAC AFS network) else install rogue (recommend Anaconda method) on your local machine
+
+```bash
+$ source Simple-ZCU216-Example/software/setup_env_slac.sh
+```
+
+2) Go to software directory and lauch the GUI:
 
 ```bash
 $ cd Simple-ZCU216-Example/software
-```
-
-2) Setup the Rogue Anaconda install (if on SLAC AFS network) else you will need to do the Anaconda Rogue install on local machine
-
-```bash
-$ source setup_env_slac.sh
-```
-
-3) Lauch the GUI (assumes your DHCP server assigns 10.0.0.200 to RFSoC's mac address):
-
-```bash
-$ python scripts/devGui.py --ip 10.0.0.200
+$ python scripts/devGui.py --ip 10.0.0.10
 ```
 
 <!--- ######################################################## -->
