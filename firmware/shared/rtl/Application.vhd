@@ -106,13 +106,15 @@ begin
 
    U_AppRingBuffer : entity axi_soc_ultra_plus_core.AppRingBuffer
       generic map (
-         TPD_G            => TPD_G,
-         EN_ADC_BUFF_G    => true,
-         EN_DAC_BUFF_G    => true,
-         NUM_ADC_CH_G     => NUM_ADC_CH_C,
-         NUM_DAC_CH_G     => NUM_DAC_CH_C,
-         RAM_ADDR_WIDTH_G => RAM_ADDR_WIDTH_C,
-         AXIL_BASE_ADDR_G => AXIL_CONFIG_C(RING_INDEX_C).baseAddr)
+         TPD_G                  => TPD_G,
+         EN_ADC_BUFF_G          => true,
+         EN_DAC_BUFF_G          => true,
+         NUM_ADC_CH_G           => NUM_ADC_CH_C,
+         NUM_DAC_CH_G           => NUM_DAC_CH_C,
+         ADC_SAMPLE_PER_CYCLE_G => SAMPLE_PER_CYCLE_C,
+         DAC_SAMPLE_PER_CYCLE_G => SAMPLE_PER_CYCLE_C,
+         RAM_ADDR_WIDTH_G       => RAM_ADDR_WIDTH_C,
+         AXIL_BASE_ADDR_G       => AXIL_CONFIG_C(RING_INDEX_C).baseAddr)
       port map (
          -- DMA Interface (dmaClk domain)
          dmaClk          => dmaClk,
@@ -167,7 +169,7 @@ begin
          TPD_G              => TPD_G,
          NUM_CH_G           => 16,
          RAM_ADDR_WIDTH_G   => RAM_ADDR_WIDTH_C,
-         SAMPLE_PER_CYCLE_G => 16,
+         SAMPLE_PER_CYCLE_G => SAMPLE_PER_CYCLE_C,
          AXIL_BASE_ADDR_G   => AXIL_CONFIG_C(DAC_SIG_INDEX_C).baseAddr)
       port map (
          -- DAC Interface (dspClk domain)

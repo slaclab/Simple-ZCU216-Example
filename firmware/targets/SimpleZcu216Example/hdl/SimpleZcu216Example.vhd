@@ -126,6 +126,9 @@ begin
          ------------------------
          --  Top Level Interfaces
          ------------------------
+         -- DSP Clock and Reset Monitoring
+         dspClk          => dspClk,
+         dspRst          => dspRst,
          -- DMA Interfaces  (dmaClk domain)
          dmaClk          => dmaClk,
          dmaRst          => dmaRst,
