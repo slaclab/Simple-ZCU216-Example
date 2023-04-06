@@ -15,7 +15,7 @@ import axi_soc_ultra_plus_core.hardware.XilinxZcu216 as xilinxZcu216
 import surf.xilinx                                   as xil
 import simple_zcu216_example                         as rfsoc
 
-class XilinxZcu216(pr.Device):
+class RFSoC(pr.Device):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
 

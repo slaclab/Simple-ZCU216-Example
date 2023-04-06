@@ -1,5 +1,5 @@
 Root:
-  XilinxZcu216:
+  RFSoC:
     Application:
       AppRingBuffer:
         Adc:

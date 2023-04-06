@@ -24,7 +24,7 @@ import pyrogue.utilities.prbs
 import simple_zcu216_example                 as rfsoc
 import axi_soc_ultra_plus_core.rfsoc_utility as rfsoc_utility
 
-rogue.Version.minVersion('5.10.0')
+rogue.Version.minVersion('5.17.0')
 
 class Root(pr.Root):
     def __init__(self,
@@ -61,7 +61,7 @@ class Root(pr.Root):
             self.memMap = rogue.hardware.axi.AxiMemMap('/dev/axi_memory_map')
 
         # Added the RFSoC HW device
-        self.add(rfsoc.XilinxZcu216(
+        self.add(rfsoc.RFSoC(
             memBase    = self.memMap,
             offset     = 0x04_0000_0000, # Full 40-bit address space
             expand     = True,
@@ -102,56 +102,34 @@ class Root(pr.Root):
         super(Root, self).start(**kwargs)
 
         # Useful pointers
-        lmk       = self.XilinxZcu216.Hardware.Lmk
-        i2cToSpi  = self.XilinxZcu216.Hardware.I2cToSpi
-        dacSigGen = self.XilinxZcu216.Application.DacSigGen
-        rfdc      = self.XilinxZcu216.RfDataConverter
+        dacSigGen = self.RFSoC.Application.DacSigGen
 
-        # Set the SPI clock rate
-        i2cToSpi.SpiClockRate.setDisp('115kHz')
+        # Update all SW remote registers
+        self.ReadAll()
 
-        # Configure the LMK for 4-wire SPI
-        lmk.LmkReg_0x0000.set(value=0x10) # 4-wire SPI
-        lmk.LmkReg_0x015F.set(value=0x3B) # STATUS_LD1 = SPI readback
+        # Load the Default YAML file
+        print(f'Loading path={self.defaultFile} Default Configuration File...')
+        self.LoadConfig(self.defaultFile)
+        self.ReadAll()
 
-        # Check for default file path
-        if (self.defaultFile is not None) :
+        # Initialize the LMK/LMX Clock chips
+        self.RFSoC.Hardware.InitClock(lmkConfig=self.lmkConfig)
 
-            # Load the Default YAML file
-            print(f'Loading path={self.defaultFile} Default Configuration File...')
-            self.LoadConfig(self.defaultFile)
+        # Initialize the RF Data Converter
+        self.RFSoC.RfDataConverter.Init()
 
-            # Load the LMK configuration from the TICS Pro software HEX export
-            for i in range(2): # Seems like 1st time after power up that need to load twice
-                lmk.enable.set(True)
-                lmk.PwrDwnLmkChip()
-                lmk.PwrUpLmkChip()
-                lmk.LoadCodeLoaderHexFile(self.lmkConfig)
-                lmk.Init()
-                lmk.enable.set(False)
+        # Wait for DSP Clock to be stable
+        while(self.RFSoC.AxiSocCore.AxiVersion.DspReset.get()):
+            time.sleep(0.01)
 
-                # Reset the RF Data Converter
-                print(f'Resetting RF Data Converter...')
-                rfdc.Reset.set(0x1)
-                time.sleep(0.1)
-                for i in range(4):
-                    rfdc.adcTile[i].RestartSM.set(0x1)
-                    while rfdc.adcTile[i].pllLocked.get() != 0x1:
-                        time.sleep(0.1)
-                    rfdc.dacTile[i].RestartSM.set(0x1)
-                    while rfdc.dacTile[i].pllLocked.get() != 0x1:
-                        time.sleep(0.1)
-
-            # Wait for DSP Clock to be stable
-            time.sleep(1.0)
-
-            # Load the waveform data into DacSigGen
+        # Load the waveform data into DacSigGen
+        csvFile = dacSigGen.CsvFilePath.get()
+        if csvFile != '':
             if self.top_level != '':
-                csvFile = dacSigGen.CsvFilePath.get()
                 dacSigGen.CsvFilePath.set(f'{self.top_level}/{csvFile}')
             dacSigGen.LoadCsvFile()
 
-            # Update all SW remote registers
-            self.ReadAll()
+        # Update all SW remote registers
+        self.ReadAll()
 
     ##################################################################################
