@@ -23,8 +23,9 @@ import pyrogue.utilities.prbs
 
 import simple_zcu216_example                 as rfsoc
 import axi_soc_ultra_plus_core.rfsoc_utility as rfsoc_utility
+import axi_soc_ultra_plus_core as soc_core
 
-rogue.Version.minVersion('5.17.0')
+rogue.Version.minVersion('5.18.4')
 
 class Root(pr.Root):
     def __init__(self,
@@ -55,6 +56,8 @@ class Root(pr.Root):
         ##################################################################################
 
         if ip != None:
+            # Check if we can ping the device and TCP socket not open
+            soc_core.connectionTest(ip)
             # Start a TCP Bridge Client, Connect remote server at 'ethReg' ports 9000 & 9001.
             self.memMap = rogue.interfaces.memory.TcpClient(ip,9000)
         else:
