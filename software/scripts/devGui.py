@@ -36,7 +36,7 @@ if __name__ == "__main__":
         "--ip",
         type     = str,
         required = False,
-        default  = '10.0.0.200',
+        default  = '10.0.0.10',
         help     = "ETH Host Name (or IP address)",
     )
 
