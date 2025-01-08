@@ -58,7 +58,7 @@ drwxr-xr-x 2 ruckman re 2.0K Feb  4 21:15 .
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
-$ source /path/to/petalinux/2023.2/settings.sh
+$ source /path/to/petalinux/2024.2/settings.sh
 ```
 
 3) Go to the target directory and run the `CreatePetalinuxProject.sh` script with arg pointing to path of .XSA file:
