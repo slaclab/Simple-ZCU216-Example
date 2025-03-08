@@ -27,6 +27,9 @@ use work.AppPkg.all;
 library axi_soc_ultra_plus_core;
 use axi_soc_ultra_plus_core.AxiSocUltraPlusPkg.all;
 
+library unisim;
+use unisim.vcomponents.all;
+
 entity RfDataConverter is
    generic (
       TPD_G            : time := 1 ns;
@@ -43,6 +46,10 @@ entity RfDataConverter is
       dacN            : out slv(15 downto 0);
       sysRefP         : in  sl;
       sysRefN         : in  sl;
+      plClkP          : in  sl;
+      plClkN          : in  sl;
+      plSysRefP       : in  sl;
+      plSysRefN       : in  sl;
       -- ADC/DAC Interface (dspClk domain)
       dspClk          : out sl;
       dspRst          : out sl;
@@ -67,10 +74,10 @@ architecture mapping of RfDataConverter is
          adc2_clk_n      : in  std_logic;
          clk_adc2        : out std_logic;
          clk_adc3        : out std_logic;
-         dac2_clk_p      : in  std_logic;
-         dac2_clk_n      : in  std_logic;
          clk_dac0        : out std_logic;
          clk_dac1        : out std_logic;
+         dac2_clk_p      : in  std_logic;
+         dac2_clk_n      : in  std_logic;
          clk_dac2        : out std_logic;
          clk_dac3        : out std_logic;
          s_axi_aclk      : in  std_logic;
@@ -95,6 +102,8 @@ architecture mapping of RfDataConverter is
          irq             : out std_logic;
          sysref_in_p     : in  std_logic;
          sysref_in_n     : in  std_logic;
+         user_sysref_adc : in  std_logic;
+         user_sysref_dac : in  std_logic;
          vin00_p         : in  std_logic;
          vin00_n         : in  std_logic;
          vin01_p         : in  std_logic;
@@ -292,23 +301,41 @@ architecture mapping of RfDataConverter is
    signal dspReset  : sl := '1';
    signal dspResetL : sl := '0';
 
+   signal plSysRefRaw : sl := '0';
+   signal adcSysRef   : sl := '0';
+   signal dacSysRef   : sl := '0';
+
 begin
+
+   U_plSysRefRaw : IBUFDS
+      port map (
+         I  => plSysRefP,
+         IB => plSysRefN,
+         O  => plSysRefRaw);
+
+   U_adcSysRef : entity surf.Synchronizer
+      generic map (
+         TPD_G => TPD_G)
+      port map (
+         clk     => rfdcClk,
+         dataIn  => plSysRefRaw,
+         dataOut => adcSysRef);
+
+   U_dacSysRef : entity surf.Synchronizer
+      generic map (
+         TPD_G => TPD_G)
+      port map (
+         clk     => dspClock,
+         dataIn  => plSysRefRaw,
+         dataOut => dacSysRef);
 
    U_IpCore : RfDataConverterIpCore
       port map (
          -- Clock Ports
          adc2_clk_p      => adcClkP,
          adc2_clk_n      => adcClkN,
-         clk_adc0        => refClk,
-         clk_adc1        => open,
-         clk_adc2        => open,
-         clk_adc3        => open,
          dac2_clk_p      => dacClkP,
          dac2_clk_n      => dacClkN,
-         clk_dac0        => open,
-         clk_dac1        => open,
-         clk_dac2        => open,
-         clk_dac3        => open,
          -- AXI-Lite Ports
          s_axi_aclk      => axilClk,
          s_axi_aresetn   => axilRstL,
@@ -330,9 +357,10 @@ begin
          s_axi_rvalid    => axilReadSlave.rvalid,
          s_axi_rready    => axilReadMaster.rready,
          -- Misc. Ports
-         irq             => open,
          sysref_in_p     => sysRefP,
          sysref_in_n     => sysRefN,
+         user_sysref_adc => adcSysRef,
+         user_sysref_dac => dacSysRef,
          -- ADC Ports
          vin00_p         => adcP(0),
          vin00_n         => adcN(0),
@@ -520,17 +548,24 @@ begin
          s33_axis_tvalid => '1',
          s33_axis_tready => open);
 
+   U_IBUFDS : IBUFDS
+      port map(
+         I  => plClkP,
+         IB => plClkN,
+         O  => refClk);
+
    U_Pll : entity surf.ClockManagerUltraScale
       generic map(
          TPD_G             => TPD_G,
          TYPE_G            => "PLL",
-         INPUT_BUFG_G      => false,
+         INPUT_BUFG_G      => true,
          FB_BUFG_G         => true,
          RST_IN_POLARITY_G => '1',
          NUM_CLOCKS_G      => 2,
          -- MMCM attributes
-         CLKIN_PERIOD_G    => 3.2,      -- 312.5 MHz
-         CLKFBOUT_MULT_G   => 4,        -- 1.25 GHz = 4 x 312.5 MHz
+         CLKIN_PERIOD_G    => 2.0,      -- 500 MHz
+         DIVCLK_DIVIDE_G   => 2,
+         CLKFBOUT_MULT_G   => 5,        -- 1.25 GHz = 5 x 500 MHz /2
          CLKOUT0_DIVIDE_G  => 6,        -- 208.3 MHz = 1.25GHz/6
          CLKOUT1_DIVIDE_G  => 8)        -- 156.25 MHz = 1.25GHz/8
       port map(
@@ -568,35 +603,17 @@ begin
       end if;
    end process;
 
-   GEN_VEC :
-   for i in 15 downto 0 generate
-
-      --------------
-      -- ADC Gearbox
-      --------------
-      U_Gearbox_ADC : entity surf.AsyncGearbox
-         generic map (
-            TPD_G              => TPD_G,
-            SLAVE_WIDTH_G      => 192,
-            MASTER_WIDTH_G     => 256,
-            EN_EXT_CTRL_G      => false,
-            -- Async FIFO generics
-            FIFO_MEMORY_TYPE_G => "block",
-            FIFO_ADDR_WIDTH_G  => 8)
-         port map (
-            -- Slave Interface
-            slaveClk    => rfdcClk,
-            slaveRst    => rfdcRst,
-            slaveData   => adc(i),
-            slaveValid  => adcValid(i),
-            slaveReady  => open,
-            -- Master Interface
-            masterClk   => dspClock,
-            masterRst   => dspReset,
-            masterData  => dspAdc(i),
-            masterValid => open,
-            masterReady => '1');
-
-   end generate GEN_VEC;
+   U_Gearbox : entity axi_soc_ultra_plus_core.Ssr12ToSsr16Gearbox
+      generic map (
+         TPD_G    => TPD_G,
+         NUM_CH_G => 16)
+      port map (
+         -- Slave Interface
+         wrClk  => rfdcClk,
+         wrData => adc,
+         -- Master Interface
+         rdClk  => dspClock,
+         rdRst  => dspReset,
+         rdData => dspAdc);
 
 end mapping;

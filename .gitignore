@@ -38,6 +38,7 @@ bin*
 .Xil*
 .obj*
 .ipynb_checkpoints*
+linux*
 
 # Only .bit.gz and .mcs.gz should be committed to git
 *.bit
@@ -51,3 +52,4 @@ bin*
 *.pdi
 *.bif
 *.elf
+*.dcp
