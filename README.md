@@ -58,7 +58,6 @@ drwxr-xr-x 2 ruckman re 2.0K Feb  4 21:15 .
 
 ```bash
 $ source Simple-ZCU216-Example/firmware/vivado_setup.sh
-$ source /path/to/YoctoProjects/2024.2/settings.sh
 ```
 
 3) Go to the target directory and run the `BuildYoctoProject.sh` script with arg pointing to path of .XSA file:
