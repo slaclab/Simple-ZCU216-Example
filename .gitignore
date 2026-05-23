@@ -67,3 +67,6 @@ linux*
 .planning/
 planning/
 CLAUDE.md
+
+# Sphinx local build env
+.venv-docs/
