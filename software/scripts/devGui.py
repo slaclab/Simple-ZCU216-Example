@@ -11,12 +11,12 @@
 import setupLibPaths
 import simple_zcu216_example
 
-import os
 import sys
 import argparse
 import importlib
 import rogue
-import axi_soc_ultra_plus_core.rfsoc_utility.pydm
+import pyrogue.pydm
+from axi_soc_ultra_plus_core.rfsoc_utility.gui.GuiTop import GuiTop
 
 # rogue.Logging.setFilter("pyrogue.protocols.UartMemory",rogue.Logging.Info)
 # rogue.Logging.setLevel(rogue.Logging.Debug)
@@ -75,12 +75,14 @@ if __name__ == "__main__":
         initRead    = args.initRead,
         defaultFile = args.defaultFile,
     ) as root:
-        axi_soc_ultra_plus_core.rfsoc_utility.pydm.runPyDM(
-            serverList = root.zmqServer.address,
-            ui       = f'{os.path.dirname(axi_soc_ultra_plus_core.rfsoc_utility.__file__)}/gui/GuiTop.py',
+        pyrogue.pydm.runPyDM(
+            serverList      = root.zmqServer.address,
+            display_factory = lambda parent=None, args=[], macros=None: GuiTop(
+                parent   = parent,
+                args     = args + ['numAdcCh=16', 'numDacCh=16'],
+                macros   = macros,
+            ),
             sizeX    = 800,
             sizeY    = 800,
-            numAdcCh = 16,
-            numDacCh = 16,
         )
     #################################################################
