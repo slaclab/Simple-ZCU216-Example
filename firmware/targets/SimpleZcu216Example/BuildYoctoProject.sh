@@ -10,6 +10,18 @@ hwType=XilinxZcu216
 numLane=2
 
 # Define number of DEST per DMA lane
+#
+# Soft default, NOT a hardware/driver limit: the DMA TDEST field is 8 bits
+# (256 dest/lane) and the kernel driver supports far more. The practical ceiling
+# is the on-board rogue TCP bridge's budget (~10 file descriptors + ~4 threads
+# per numLane*numDest stream). axi-soc-ultra-plus-core/BuildYoctoProject.sh
+# scales the systemd LimitNOFILE/LimitNPROC and kernel.threads-max with
+# numLane*numDest, and the bridge initializes PyRFdc before the stream loop so
+# libmetal's UIO fd stays below FD_SETSIZE (1024). High channel counts also need
+# rxBuffCnt raised (shared RX pool). See ESROGUE-549.
+#
+# Note: the Xilinx meta-layer enables tcf-agent (TCP port 1534) by default. If it
+# collides with your setup, disable it on the board: systemctl disable --now tcf-agent
 numDest=32
 
 # Define number of DMA TX/RX Buffers
