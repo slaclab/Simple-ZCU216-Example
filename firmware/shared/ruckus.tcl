@@ -10,4 +10,5 @@ loadSource -dir "$::DIR_PATH/rtl"
 
 # Load IP cores
 loadIpCore -dir "$::DIR_PATH/ip"
+AddPyRfdcMem
 
