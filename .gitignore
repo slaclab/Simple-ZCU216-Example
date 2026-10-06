@@ -1,4 +1,4 @@
-# SVN files
+7# SVN files
 .svn*
 
 # EMACS temp files
@@ -64,6 +64,7 @@ linux*
 .vscode/
 .cursor/
 .claude/
+.gsd/
 .planning/
 planning/
 CLAUDE.md
