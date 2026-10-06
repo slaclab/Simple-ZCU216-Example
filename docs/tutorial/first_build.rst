@@ -5,9 +5,9 @@ This tutorial is the end-to-end build procedure for the
 ``Simple-ZCU216-Example`` firmware on the Xilinx ZCU216 evaluation board
 (FPGA part ``xczu49dr-ffvf1760-2-e``, firmware version ``v3.1.0.0`` /
 ``PRJ_VERSION = 0x03010000``). It documents only the commands that differ
-between this board and the platform-shared workflow; for host-prep details,
+between this board and the platform-shared workflow. For host-prep details,
 build-output redirection, the bare-metal-vs-Docker decision, and the
-serial-console snippet — all of which are board-agnostic — sections below
+serial-console snippet (all of which are board-agnostic), the sections below
 deep-link to the corresponding anchors in the platform docs site
 (:hub:`tutorial/first_soc_bringup.html`).
 
@@ -21,16 +21,16 @@ deep-link to the corresponding anchors in the platform docs site
    - **Target FPGA part:** ``xczu49dr-ffvf1760-2-e``
    - **Conda env:** ``rogue_v6.12.0``
 
-   Your filename will differ — the build embeds the build timestamp, your
+   Your filename will differ: the build embeds the build timestamp, your
    username, and the current git short-SHA, following the schema
    ``<TargetName>-<PRJ_VERSION>-<YYYYMMDDHHMMSS>-<user>-<git-short-SHA>``.
    Approximate end-to-end build time on a typical Linux build host:
-   **~60 min** total — firmware (~17 min) plus Yocto (~45 min).
+   **~60 min** total: firmware (~17 min) plus Yocto (~45 min).
 
 Clone
 -----
 
-Install `git-lfs <https://git-lfs.com>`_ in your shell profile (one-time per
+Install `git-lfs <https://git-lfs.com>`_ and initialize it (one-time per
 environment) before cloning, so any LFS-tracked binaries are fetched correctly:
 
 .. code-block:: bash
@@ -43,7 +43,7 @@ Clone the repository with all submodules:
 
    git clone --recursive https://github.com/slaclab/Simple-ZCU216-Example.git
 
-The ``--recursive`` flag initialises the
+The ``--recursive`` flag initializes the
 :repo:`firmware/submodules/surf`,
 :repo:`firmware/submodules/axi-soc-ultra-plus-core`,
 :repo:`firmware/submodules/ruckus`, and
@@ -61,7 +61,7 @@ environment:
    source firmware/vivado_setup.sh
    source software/setup_env_slac.sh
 
-The first script sets ``PATH``, ``LD_LIBRARY_PATH``, and the Xilinx licence
+The first script sets ``PATH``, ``LD_LIBRARY_PATH``, and the Xilinx license
 server variables required by ``make``. The second activates the
 ``rogue_v6.12.0`` conda environment used by the Python control layer.
 
@@ -93,7 +93,7 @@ After a successful build, the ``.bit`` and ``.xsa`` artifacts are written to
 
 .. note::
 
-   Your filename will differ — the build embeds the build timestamp, your
+   Your filename will differ: the build embeds the build timestamp, your
    username, and the current git short-SHA. ``PRJ_VERSION = 0x03010000``
    corresponds to firmware version ``v3.1.0.0`` and is tracked in
    :repo:`firmware/targets/shared_version.mk`.
@@ -136,9 +136,9 @@ SD card
 -------
 
 Once the Yocto build is complete, write the boot images to an SD card. The
-verified procedure — covering both the manual mount-and-copy recipe and the
+verified procedure, covering both the manual mount-and-copy recipe and the
 scripted ``CreateDiskImage.sh`` path
-(:hub:`how-to/sd_card_imaging.html`) — is documented on the platform
+(:hub:`how-to/sd_card_imaging.html`), is documented on the platform
 docs site at :hub:`tutorial/first_soc_bringup.html#sd-card`. The four files to
 copy live under
 ``firmware/build/YoctoProjects/SimpleZcu216Example/linux/``

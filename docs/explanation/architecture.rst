@@ -56,7 +56,7 @@ Three asynchronous clock domains drive this application:
 
 All three are declared as asynchronous clock groups in the XDC, so
 Vivado's timing engine does not attempt to close timing across them.
-CDC crossings between any two domains use surf primitives
+Crossings between any two domains use surf primitives
 (``Synchronizer`` for control/status, ``Ssr12ToSsr16Gearbox`` for the
 ADC sample bus). For the platform-level CDC philosophy and the hub's
 treatment of clock-group declarations, see
@@ -81,8 +81,8 @@ The application uses two DMA lanes (``DMA_SIZE_C = 2`` in
 Adding lanes is a coordinated change: ``DMA_SIZE_C`` in
 :repo:`firmware/shared/rtl/AppPkg.vhd` and the stream wiring in
 :repo:`firmware/python/simple_zcu216_example/_Root.py` must be
-updated together. For the platform-level DMA model (engine, AXI
-Stream framing, host TCP-bridge convention), see
+updated together. For the platform-level DMA model (engine, AXI-Stream
+framing, host TCP-bridge convention), see
 :hub:`explanation/architecture.html#dma-model`.
 
 Sample bus
@@ -103,7 +103,7 @@ Startup discipline
 ------------------
 
 The application's PyRogue ``Application`` device is instantiated with
-``enabled=False`` and is only enabled after the ``dspClk`` is stable.
+``enabled=False`` and is only enabled after ``dspClk`` is stable.
 The ``Root.start()`` method enforces the order: clock chip
 initialization, DSP-reset wait, RFDC initialization, MTS sync, YAML
 config load, and finally the SigGen waveform load. Bypassing this
