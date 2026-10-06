@@ -13,8 +13,8 @@ maps physical board I/O to internal AXI buses and three clock domains:
 
 * **LMK ports:** ``lmkSync``, ``clkMuxSel``, ``i2c1Scl``, ``i2c1Sda`` (clock chip control).
 * **RF data converter ports:** ADC differential clock and data
-  (``adcClkP/N``, ``adcP/N`` — 16 channels); DAC differential clock and data
-  (``dacClkP/N``, ``dacP/N`` — 16 channels); SYSREF and PL clock differential pairs.
+  (``adcClkP/N``, ``adcP/N``; 16 channels); DAC differential clock and data
+  (``dacClkP/N``, ``dacP/N``; 16 channels); SYSREF and PL clock differential pairs.
 * **SYSMON ports:** ``vPIn``, ``vNIn``.
 
 Build-time generics are ``TPD_G`` (propagation-delay convention from surf) and
@@ -65,7 +65,7 @@ Clock domains
      - 416.667 MHz
      - RFDC ADC output.
 
-All cross-domain crossings use surf ``Synchronizer`` or ``Ssr12ToSsr16Gearbox``
+All clock-domain crossings use surf ``Synchronizer`` or ``Ssr12ToSsr16Gearbox``
 primitives; the three domains are declared as asynchronous groups in the XDC.
 For the platform-level CDC philosophy, see
 :hub:`explanation/architecture.html#clock-domains`.
